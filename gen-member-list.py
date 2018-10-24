@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-import json
 import logging
-import urllib.request
+import requests
 
 from datetime import datetime
 from subprocess import Popen, PIPE
@@ -31,17 +30,19 @@ def generate_list():
         domain = line.split('subscription:')[-1]
         url = "https://%s/api/v1/instance" % domain
         try:
-            req = urllib.request.Request(url, headers={
+            headers = {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0 (https://mastodon-relay.moew.science)'
-            })
-            with urllib.request.urlopen(req) as response:
-                page = json.loads(response.read().decode('utf-8'))
-                title = page['title']
-                version = page['version']
-                stats = page['stats']
-                md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s)' % (title, domain,
-                                                                           version, stats['user_count'], stats['status_count'], stats['domain_count'])
-                md_list.append(md_line)
+            }
+            response = requests.get(url, headers=headers)
+            if not response:
+                response.raise_for_status()
+            page = response.json()
+            title = page['title']
+            version = page['version']
+            stats = page['stats']
+            md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s)' % (title, domain,
+                                                                       version, stats['user_count'], stats['status_count'], stats['domain_count'])
+            md_list.append(md_line)
         except Exception as e:
             md_line = '  * [%s](https://%s) | (Stats Unavailable)' % (domain, domain)
             md_list.append(md_line)
