@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import json
+import logging
 import urllib.request
 
 from datetime import datetime
@@ -29,7 +30,7 @@ def generate_list():
         url = "https://%s/api/v1/instance" % domain
         try:
             req = urllib.request.Request(url, headers={
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0 (https://mastodon-relay.moew.science)'
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0 (https://mastodon-relay.moew.science)'
                 })
             with urllib.request.urlopen(req) as response:
                 page = json.loads(response.read().decode('utf-8'))
@@ -41,7 +42,7 @@ def generate_list():
         except Exception as e:
             md_line = '  * [%s](https://%s) | (Stats Unavailable)' % (domain, domain)
             md_list.append(md_line)
-            print(e)
+            logger.warning(e)
     return md_list
 
 def write_file(filename, data, mode='w'):
@@ -53,9 +54,18 @@ def write_file(filename, data, mode='w'):
     f.close()
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+    log_handler = logging.FileHandler('gen-member-list.log')
+    log_handler.setLevel(logging.INFO)
+    log_format = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s.')
+    log_handler.setFormatter(log_format)
+    logger.addHandler(log_handler)
+
+    logger.info('Started generating member list.')
     sub_list = generate_list()
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     date_str = 'Updated %s instances at: %s HKT' % (len(sub_list), curr_time)
+    logger.info(date_str)
 
     full_page = '%s\n%s\n\n%s\n' % (
             headers, '\n'.join(sub_list), date_str)

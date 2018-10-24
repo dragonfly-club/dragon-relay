@@ -1,4 +1,6 @@
 out/
+*.log
+sample-input.txt
 
 *.pyc
 
