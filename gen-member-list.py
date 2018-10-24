@@ -75,3 +75,4 @@ if __name__ == "__main__":
     full_page = '%s\n%s\n\n%s\n' % (
         headers, '\n'.join(sub_list), date_str)
     write_file(outfile, full_page)
+    logger.info('Write new page template done.')
