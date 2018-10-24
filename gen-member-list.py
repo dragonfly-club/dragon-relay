@@ -60,6 +60,7 @@ def write_file(filename, data, mode='w'):
 
 if __name__ == "__main__":
     logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
     log_handler = logging.FileHandler('gen-member-list.log')
     log_handler.setLevel(logging.INFO)
     log_format = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s.')
