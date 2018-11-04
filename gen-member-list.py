@@ -22,8 +22,30 @@ def read_redis_keys():
     return p.communicate(input=cmdin)[0].decode('utf-8')
 
 
+def generate_instance_id(page):
+    uid = []
+    # Use combinition of instance URI, email and admin info to determine an unique instance
+    # This is used to de-duplicate when one instance may registered multiple domains
+    try:
+        uid.append(page['uri'] if page['uri'] else '')
+    except KeyError:
+        pass
+    try:
+        uid.append(page['email'] if page['email'] else '')
+    except KeyError:
+        pass
+    try:
+        uid.append(page['contact_account']['id'] if page['contact_account'] else '')
+        uid.append(page['contact_account']['username'] if page['contact_account'] else '')
+    except KeyError:
+        pass
+
+    return '_'.join(uid)
+
+
 def generate_list():
     md_list = []
+    instance_ids = set()
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
             continue
@@ -37,6 +59,11 @@ def generate_list():
             if not response:
                 response.raise_for_status()
             page = response.json()
+            uid = generate_instance_id(page)
+            if uid in instance_ids:
+                logger.info("Skipped duplicate domain %s" % domain)
+                continue
+            instance_ids.add(uid)
             title = page['title']
             version = page['version']
             stats = page['stats']
