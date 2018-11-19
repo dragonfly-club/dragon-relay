@@ -18,11 +18,13 @@ Mastodon 自 v2.5.0 版本添加了对 Federation Relay 的支持，首先需要
 
 ## 添加并启用
 
-> Note: By subscribing this relay, you acknowledge of understanding this is a (mostly) Chinese speaking relay, so that it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese.
+:!! info
+    Note: By subscribing this relay, you acknowledge of understanding that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese.
 
 一个 Mastodon 实例可以订阅多个 Relay 服务，实例管理员可在后台设置中的“管理-Relays-Add New Relay”添加以下地址：
 
-`https://mastodon-relay.moew.science/inbox`
+:>>
+    `https://mastodon-relay.moew.science/inbox`
 
 新添加的 Relay 默认处于禁用状态，点击 Enable 按扭并等待几分钟后刷新页面，如果 Status 变为 Enabled 即已经成功添加并订阅本 Relay 服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
 
