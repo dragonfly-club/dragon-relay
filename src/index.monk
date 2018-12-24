@@ -19,7 +19,7 @@ Mastodon 自 v2.5.0 版本添加了对 Federation Relay 的支持，首先需要
 ## 添加并启用
 
 :!! info
-    Note: By subscribing this relay, you acknowledge of understanding that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and even blocked without any notice if too many non-Chinese toots are sent to us.
+    Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
 
 一个 Mastodon 实例可以订阅多个 Relay 服务，实例管理员可在后台设置中的“管理-Relays-Add New Relay”添加以下地址：
 
