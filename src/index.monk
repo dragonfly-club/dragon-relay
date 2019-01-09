@@ -1,42 +1,42 @@
 ---
 meta title: Quick Start
 menu title: Home
-title: Quick Start
-subtitle: Use relay instead of follow bot.
+title: 立即使用
+subtitle: 用中继代替关注 Bot.
 ---
 
 # 这是什么
 
-Mastodon Relay 是 Mastodon 网络中的中继节点，订阅某一 Relay 的所有实例可以互相同步自己实例的公共时间轴，进而在“跨站时间轴”中看到来自其他实例用户的公开消息，所有消息经过 Relay 自动转发广播，而不需要使用 Follow bot 等手段来人为增加跨站交互。对于用户数较少或与外部实例交互不多的小型实例尤其实用，新建实例也可以通过订阅 Relay 简单快速地丰富自己的跨站时间轴内容，一定程度上避免初期用户少的情况下站点过于冷清。
+Mastodon 中继是 Mastodon 网络中的转发结点，订阅某一中继的所有实例可以互相同步自己实例的公共时间轴，进而在“跨站时间轴”中看到来自其他实例用户的公开消息，所有消息经过中继自动转发广播，而不需要使用 Follow bot 等手段来人为增加跨站交互。对于用户数较少或与外部实例交互不多的小型实例尤其实用，新建实例也可以通过订阅中继简单快速地丰富自己的跨站时间轴内容，一定程度上避免初期用户少的情况下站点过于冷清。
 
-关于 Mastodon Federation Relay 功能的详细信息可以参看 [Github issue](https://github.com/tootsuite/mastodon/pull/7998) 和 [v2.5.0 Release Note](https://github.com/tootsuite/mastodon/releases/tag/v2.5.0). 本站的基本情况可以在 [About](@root/about//) 页面查看。
+关于 Mastodon 中继功能的详细信息可以参看 [Github issue](https://github.com/tootsuite/mastodon/pull/7998) 和 [v2.5.0 Release Note](https://github.com/tootsuite/mastodon/releases/tag/v2.5.0). 本站的基本情况可以在 [About](@root/about//) 页面查看。
 
 # 如何使用
 ## 版本要求
 
-Mastodon 自 v2.5.0 版本添加了对 Federation Relay 的支持，首先需要确认你所在的实例运行在足够新的 Mastodon 版本上。如果你是某一实例的普通用户，请联系所在实例的管理员进行配置；如果你是某一实例的管理员，但目前运行在一个尚不支持 Relay 功能的版本，请首先参考官方的 [Release Note](https://github.com/tootsuite/mastodon/releases) 进行升级。
+Mastodon 自 v2.5.0 版本添加了对中继服务的支持，首先需要确认你所在的实例运行在足够新的 Mastodon 版本上。如果你是某一实例的普通用户，请联系所在实例的管理员进行配置；如果你是某一实例的管理员，但目前运行在一个尚不支持中继功能的版本，请首先参考官方的 [Release Note](https://github.com/tootsuite/mastodon/releases) 进行升级。
 
 ## 添加并启用
 
 :!! info
     Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
 
-一个 Mastodon 实例可以订阅多个 Relay 服务，实例管理员可在后台设置中的“管理-Relays-Add New Relay”添加以下地址：
+一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址：
 
 :>>
     `https://mastodon-relay.moew.science/inbox`
 
-新添加的 Relay 默认处于禁用状态，点击 Enable 按扭并等待几分钟后刷新页面，如果 Status 变为 Enabled 即已经成功添加并订阅本 Relay 服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
+新添加的中继默认处于禁用状态，点击 Enable 按扭并等待几分钟后刷新页面，如果状态变为 Enabled 即已经成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
 
 # 其它说明
 ## 资源消耗
 
-启用 Relay 功能后实例会收到来自同一 Relay 其他实例的**所有**公开消息，消息量的增加会直接导致实例数据库与媒体文件空间占用的增加，并且会消耗更多的计算资源来处理这些消息，对于配置较低的实例可能造成一定压力，如果出现存储或性能问题，可以尝试禁用 Relay 来缓解。
+启用中继功能后实例会收到来自同一中继其他实例的**所有**公开消息，消息量的增加会直接导致实例数据库与媒体文件空间占用的增加，并且会消耗更多的计算资源来处理这些消息，对于配置较低的实例可能造成一定压力，如果出现存储或性能问题，可以尝试禁用中继来缓解。
 
 ## 故障影响
 
-Mastodon Relay 只是一个消息流转服务，并不影响实例本身的功能，在 Relay 发生故障（或被实例禁用）时，将不能再收到来自 Relay 转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 Mastodon 网络上的消息。即：跨站时间轴中来自同 Relay 其他实例的消息可能减少，其余功能均不受影响。
+Mastodon 中继只是一个消息流转服务，并不影响实例本身的功能，在中继发生故障（或被实例禁用）时，将不能再收到来自中继转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 Mastodon 网络上的消息。即：跨站时间轴中来自同中继其他实例的消息可能减少，其余功能均不受影响。
 
 ## 成员
 
-订阅本 Relay 的成员可在 [Members](@root/members//) 页面查看，页面定时更新，内容可能存在一定延迟。
+订阅本中继的成员可在 [Members](@root/members//) 页面查看，页面定时更新，内容可能存在一定延迟。
