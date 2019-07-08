@@ -5,4 +5,4 @@
 * [Home](@root/)
 * [Members](@root/members//)
 * [About](@root/about//)
-* [F&Q](@root/faq//)
+* [FAQ](@root/faq//)

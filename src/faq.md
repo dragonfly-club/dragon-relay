@@ -1,5 +1,5 @@
 ---
-title: F&Q
+title: FAQ
 ---
 
 # 常见疑问
