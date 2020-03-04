@@ -35,8 +35,10 @@ def generate_instance_id(page):
     except KeyError:
         pass
     try:
-        uid.append(page['contact_account']['id'] if page['contact_account'] else '')
-        uid.append(page['contact_account']['username'] if page['contact_account'] else '')
+        uid.append(page['contact_account']['id']
+                   if page['contact_account'] else '')
+        uid.append(page['contact_account']['username']
+                   if page['contact_account'] else '')
     except KeyError:
         pass
 
@@ -55,7 +57,7 @@ def generate_list():
             headers = {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0 (https://mastodon-relay.moew.science)'
             }
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, timeout=4)
             if not response:
                 response.raise_for_status()
             page = response.json()
