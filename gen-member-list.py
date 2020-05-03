@@ -14,6 +14,9 @@ title: Members
 以下为目前订阅了本中继服务的实例列表，列表每小时自动更新，并不完全反映最新的真实订阅情况，仅供参考。
 '''
 
+long_timeout_instances = [
+    'hello.2heng.xin',
+]
 
 def read_redis_keys():
     cmd = ['/usr/bin/redis-cli']
@@ -48,16 +51,19 @@ def generate_instance_id(page):
 def generate_list():
     md_list = []
     instance_ids = set()
+    _timeout=4
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
             continue
         domain = line.split('subscription:')[-1]
         url = "https://%s/api/v1/instance" % domain
+        if domain in long_timeout_instances:
+            _timeout = 30
         try:
             headers = {
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0 (https://mastodon-relay.moew.science)'
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0 (https://mastodon-relay.moew.science)'
             }
-            response = requests.get(url, headers=headers, timeout=4)
+            response = requests.get(url, headers=headers, timeout=_timeout)
             if not response:
                 response.raise_for_status()
             page = response.json()
@@ -80,7 +86,7 @@ def generate_list():
 
 
 def write_file(filename, data, mode='w'):
-    with open(filename, mode) as f:
+    with open(filename, mode=mode, encoding='utf-8') as f:
         try:
             f.write(str(data, 'utf-8'))
         except TypeError:
