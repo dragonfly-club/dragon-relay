@@ -22,7 +22,7 @@ Mastodon 中继的主要作用在于丰富实例的跨站时间轴内容，而�
 
 # 技术细节
 
-本中继使用 [pub-relay](https://source.joinmastodon.org/mastodon/pub-relay) 架设，尽量使用最新版本。原项目本身基本没有文档，架设方法也许什么时候我想起来了会更新到这里。服务器本体位于香港，使用 CloudFlare 作为 CDN 反代，由于中继只与各个实例的服务器交互而不需要终端用户直接访问，基本可以不必考虑某防火墙的干扰（除非某实例位于墙内）。
+本中继使用 [pub-relay](https://github.com/noellabo/pub-relay) 架设，尽量使用最新版本。原项目本身基本没有文档，架设方法也许什么时候我想起来了会更新到这里。服务器本体位于香港，使用 CloudFlare 作为 CDN 反代，由于中继只与各个实例的服务器交互而不需要终端用户直接访问，基本可以不必考虑某防火墙的干扰（除非某实例位于墙内）。
 
 此页面通过若干脚本生成内容，并使用 [Ivy](https://darrenmulholland.com/docs/ivy/index.html) 渲染为静态页面。
 

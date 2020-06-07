@@ -20,7 +20,8 @@ long_timeout_instances = [
 
 def read_redis_keys():
     cmd = ['/usr/bin/redis-cli']
-    cmdin = 'KEYS *'.encode('utf-8')
+    #cmdin = 'KEYS *'.encode('utf-8')
+    cmdin = 'KEYS relay:subscription:*'.encode('utf-8')
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     return p.communicate(input=cmdin)[0].decode('utf-8')
 
