@@ -16,17 +16,24 @@ Mastodon 中继是 Mastodon 网络中的转发结点，订阅某一中继的所�
 
 Mastodon 自 v2.5.0 版本添加了对中继服务的支持，首先需要确认你所在的实例运行在足够新的 Mastodon 版本上。如果你是某一实例的普通用户，请联系所在实例的管理员进行配置；如果你是某一实例的管理员，但目前运行在一个尚不支持中继功能的版本，请首先参考官方的 [Release Note](https://github.com/tootsuite/mastodon/releases) 进行升级。
 
+技术上，其它 ActivityPub 实现也可能兼容并可以使用此中继。
+
 ## 添加并启用
 
 :!! info
     Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
 
-一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址：
+一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可以使用此地址）：
 
 :>>
     `https://mastodon-relay.moew.science/inbox`
 
 新添加的中继默认处于禁用状态，点击 Enable 按扭并等待几分钟后刷新页面，如果状态变为 Enabled 即已经成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
+
+如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以关注 (Follow) 以下地址：
+
+:>>
+    `https://mastodon-relay.moew.science/actor`
 
 # 其它说明
 

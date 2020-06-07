@@ -18,6 +18,7 @@ long_timeout_instances = [
     'hello.2heng.xin',
 ]
 
+
 def read_redis_keys():
     cmd = ['/usr/bin/redis-cli']
     #cmdin = 'KEYS *'.encode('utf-8')
@@ -52,9 +53,10 @@ def generate_instance_id(page):
 def generate_list():
     md_list = []
     instance_ids = set()
-    _timeout=4
+    _timeout = 4
 
-    _stats = requests.get("http://127.0.0.1:8085/stats").json() # no need to check error for localhost, fail directly
+    # no need to check error for localhost, fail directly
+    _stats = requests.get("http://127.0.0.1:8085/stats").json()
 
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
@@ -99,10 +101,11 @@ def generate_list():
             version = page['version']
             stats = page['stats']
             md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
-                                                        version, stats['user_count'], stats['status_count'], stats['domain_count'], _rate * 100)
+                                                                                version, stats['user_count'], stats['status_count'], stats['domain_count'], _rate * 100)
             md_list.append(md_line)
         except Exception as e:
-            md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (domain, domain, _rate * 100)
+            md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (
+                domain, domain, _rate * 100)
             md_list.append(md_line)
             logger.warning(e)
     return md_list
