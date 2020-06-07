@@ -53,10 +53,32 @@ def generate_list():
     md_list = []
     instance_ids = set()
     _timeout=4
+
+    _stats = requests.get("http://127.0.0.1:8085/stats").json() # no need to check error for localhost, fail directly
+
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
             continue
         domain = line.split('subscription:')[-1]
+
+        # cal delivery rate
+        _total = 0
+        _rate = -1
+        try:
+            code202 = 0
+            for c, v in _stats['delivery_codes_per_domain'][domain].items():
+                if c == 'NO DOMAIN':
+                    continue
+                if c == '202':
+                    code202 = v
+                _total += v
+            if _total == 0:
+                _rate = 1
+            else:
+                _rate = code202 / _total
+        except KeyError:
+            pass
+
         url = "https://%s/api/v1/instance" % domain
         if domain in long_timeout_instances:
             _timeout = 30
@@ -76,11 +98,11 @@ def generate_list():
             title = page['title']
             version = page['version']
             stats = page['stats']
-            md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s)' % (title, domain,
-                                                                       version, stats['user_count'], stats['status_count'], stats['domain_count'])
+            md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
+                                                        version, stats['user_count'], stats['status_count'], stats['domain_count'], _rate * 100)
             md_list.append(md_line)
         except Exception as e:
-            md_line = '  * [%s](https://%s) | (Stats Unavailable)' % (domain, domain)
+            md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (domain, domain, _rate * 100)
             md_list.append(md_line)
             logger.warning(e)
     return md_list
