@@ -69,7 +69,7 @@ def generate_list():
         try:
             code202 = 0
             for c, v in _stats['delivery_codes_per_domain'][domain].items():
-                if c == 'NO DOMAIN':
+                if 'DOMAIN' in c:
                     continue
                 if c == '202':
                     code202 = v
