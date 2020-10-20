@@ -56,7 +56,7 @@ def generate_list():
     _timeout = 4
 
     # no need to check error for localhost, fail directly
-    _stats = requests.get("http://127.0.0.1:8085/stats").json()
+    _stats = requests.get("http://localhost:8085/stats").json()
 
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
