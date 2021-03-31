@@ -135,7 +135,12 @@ if __name__ == "__main__":
     date_str = 'Updated %s instances at: %s HKT' % (len(sub_list), curr_time)
     logger.info(date_str)
 
+    footer = '''
+:>> 👥 实例用户数, 💬 实例消息数, 🐘 实例互联数, 📤 中继消息发送成功率
+
+%s
+    ''' % date_str
     full_page = '%s\n%s\n\n%s\n' % (
-        headers, '\n'.join(sub_list), date_str)
+        headers, '\n'.join(sub_list), footer)
     write_file(outfile, full_page)
     logger.info('Write new page template done.')
