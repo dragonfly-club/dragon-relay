@@ -6,7 +6,7 @@ import requests
 from datetime import datetime
 from subprocess import Popen, PIPE
 
-outfile = 'src/members.md'
+outfile = 'src/members.stx'
 headers = '''---
 title: Members
 ---
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     logger.info(date_str)
 
     footer = '''
-:>>
+
     👥 实例用户数, 💬 实例消息数, 🐘 实例互联数, 📤 中继消息发送成功率
 
 %s

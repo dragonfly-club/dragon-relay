@@ -20,19 +20,19 @@ Mastodon 自 v2.5.0 版本添加了对中继服务的支持，首先需要确认
 
 ## 添加并启用
 
-:!! info
+::: infobox .warning
     Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
 
 一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可以使用此地址）：
 
-:>>
+::: span
     `https://mastodon-relay.moew.science/inbox`
 
 新添加的中继默认处于禁用状态，点击 Enable 按扭并等待几分钟后刷新页面，如果状态变为 Enabled 即已经成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
 
 如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继：
 
-:>>
+::: span
     `MIX_ENV=prod mix pleroma.relay follow https://mastodon-relay.moew.science/actor`, 或者
     `./bin/pleroma_ctl relay follow https://mastodon-relay.moew.science/actor`
 
