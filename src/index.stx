@@ -7,7 +7,7 @@ subtitle: 用中继代替关注 Bot.
 
 # 这是什么
 
-Mastodon 中继是 Mastodon 网络中的转发结点，订阅某一中继的所有实例可以互相同步自己实例的公共时间轴，进而在“跨站时间轴”中看到来自其他实例用户的公开消息，所有消息经过中继自动转发广播，而不需要使用 Follow bot 等手段来人为增加跨站交互。对于用户数较少或与外部实例交互不多的小型实例尤其实用，新建实例也可以通过订阅中继简单快速地丰富自己的跨站时间轴内容，一定程度上避免初期用户少的情况下站点过于冷清。
+Mastodon 中继是 ActivityPub 网络中的转发结点，订阅某一中继的所有实例可以互相同步自己实例的公共时间轴，进而在“跨站时间轴”中看到来自其他实例用户的公开消息，所有消息经过中继自动转发广播，而不需要使用 Follow bot 等手段来人为增加跨站交互。对于用户数较少或与外部实例交互不多的小型实例尤其实用，新建实例也可以通过订阅中继简单快速地丰富自己的跨站时间轴内容，一定程度上避免初期用户少的情况下站点过于冷清。
 
 关于 Mastodon 中继功能的详细信息可以参看 [Github issue](https://github.com/tootsuite/mastodon/pull/7998) 和 [v2.5.0 Release Note](https://github.com/tootsuite/mastodon/releases/tag/v2.5.0). 本站的基本情况可以在 [About](@root/about//) 页面查看。
 
@@ -23,7 +23,7 @@ Mastodon 自 v2.5.0 版本添加了对中继服务的支持，首先需要确认
 ::: infobox .warning
     Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
 
-一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可以使用此地址）：
+一个 Mastodon 实例可以订阅多个中继服务，实例管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址）：
 
 ::: span
     `https://mastodon-relay.moew.science/inbox`
@@ -63,7 +63,7 @@ Mastodon 自 v2.5.0 版本添加了对中继服务的支持，首先需要确认
 
 ## 故障影响
 
-Mastodon 中继只是一个消息流转服务，并不影响实例本身的功能，在中继发生故障（或被实例禁用）时，将不能再收到来自中继转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 Mastodon 网络上的消息。即：跨站时间轴中来自同中继其他实例的消息可能减少，其余功能均不受影响。
+中继只是一个消息流转服务，并不影响实例本身的功能，在中继发生故障（或被实例禁用）时，将不能再收到来自中继转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 ActivityPub 网络上的消息。即：跨站时间轴中来自同中继其他实例的消息可能减少，其余功能均不受影响。
 
 ## 成员
 
