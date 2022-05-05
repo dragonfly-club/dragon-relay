@@ -18,6 +18,10 @@ long_timeout_instances = [
     'hello.2heng.xin',
 ]
 
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0 (https://mastodon-relay.moew.science)'
+
+instance_ids = set()
+
 
 def read_redis_keys():
     cmd = ['/usr/bin/redis-cli']
@@ -47,12 +51,21 @@ def generate_instance_id(page):
     except KeyError:
         pass
 
+    # misskey
+    try:
+        uid.append(page['name'] if page['name'] else '')
+    except KeyError:
+        pass
+    try:
+        uid.append(page['hcaptchaSiteKey'] if page['hcaptchaSiteKey'] else '')
+    except KeyError:
+        pass
+
     return '_'.join(uid)
 
 
 def generate_list():
     md_list = []
-    instance_ids = set()
     _timeout = 4
 
     # no need to check error for localhost, fail directly
@@ -81,34 +94,81 @@ def generate_list():
         except KeyError:
             pass
 
-        url = "https://%s/api/v1/instance" % domain
         if domain in long_timeout_instances:
             _timeout = 30
+
+        headers = {
+            'User-Agent': USER_AGENT
+        }
+
+        # query server meta
         try:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0 (https://mastodon-relay.moew.science)'
-            }
-            response = requests.get(url, headers=headers, timeout=_timeout)
-            if not response:
-                response.raise_for_status()
-            page = response.json()
-            uid = generate_instance_id(page)
+            md_line, uid = try_mastodon(headers, domain, _timeout, _rate)
             if uid in instance_ids:
                 logger.info("Skipped duplicate domain %s" % domain)
                 continue
             instance_ids.add(uid)
-            title = page['title']
-            version = page['version']
-            stats = page['stats']
-            md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
-                                                                                version, stats['user_count'], stats['status_count'], stats['domain_count'], _rate * 100)
             md_list.append(md_line)
+        except requests.HTTPError as e:
+            if e.response.status_code == 404:
+                try:
+                    md_line, uid = try_misskey(headers, domain, _timeout, _rate)
+                    if uid and uid in instance_ids:
+                        logger.info("Skipped duplicate domain %s" % domain)
+                    instance_ids.add(uid)
+                except Exception as e:
+                    md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (
+                    domain, domain, _rate * 100)
+                    md_list.append(md_line)
+                    logger.warning(e)
+                    continue
+
+                md_list.append(md_line)
         except Exception as e:
             md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (
                 domain, domain, _rate * 100)
             md_list.append(md_line)
             logger.warning(e)
     return md_list
+
+
+def try_mastodon(headers, domain, timeout, send_rate):
+    url = "https://%s/api/v1/instance" % domain
+    response = requests.get(url, headers=headers, timeout=timeout)
+    if not response:
+        response.raise_for_status()
+    page = response.json()
+
+    uid = generate_instance_id(page)
+
+    title = page['title']
+    version = page['version']
+    stats = page['stats']
+    md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
+                                                                        version, stats['user_count'], stats['status_count'], stats['domain_count'], send_rate * 100)
+    return md_line, uid
+
+
+def try_misskey(headers, domain, timeout, send_rate):
+    url_meta = "https://%s/api/meta" % domain
+    resp_meta = requests.post(url_meta, headers=headers, timeout=timeout)
+    if not resp_meta:
+        resp_meta.raise_for_status()
+    meta = resp_meta.json()
+
+    uid = generate_instance_id(meta)
+
+    title = meta['name']
+    version = meta['version']
+
+    url_stats = "https://%s/api/stats" % domain
+    resp_stats = requests.post(url_stats, headers=headers, timeout=timeout)
+    if not resp_stats:
+        resp_stats.raise_for_status()
+    stats = resp_stats.json()
+    md_line = '  * [%s](https://%s) | (v%s (Misskey) 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
+                                                                        version, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], send_rate * 100)
+    return md_line, uid
 
 
 def write_file(filename, data, mode='w'):
