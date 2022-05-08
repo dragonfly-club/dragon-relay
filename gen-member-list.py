@@ -6,26 +6,79 @@ import requests
 from datetime import datetime
 from subprocess import Popen, PIPE
 
-outfile = 'src/members.stx'
+outfile = 'src/index.stx'
 headers = '''---
-title: Members
+title: DragonRelay
+subtitle: Mastodon/Misskey/Pleroma中文中继
 ---
 
-以下为目前订阅了本中继服务的实例列表，列表每小时自动更新，并不完全反映最新的真实订阅情况，仅供参考。
+欢迎来到**DragonRelay**！
+
+DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼容ActivityPub的软件，欢迎各个社区管理员加入！
+
+# 如何使用
+
+
+::: infobox .warning
+    Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
+
+Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址）：
+
+::: span
+    `https://relay.dragon-fly.club/inbox`
+
+刷新后状态变为 Enabled 即已经成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
+
+如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继：
+
+::: span
+    `MIX_ENV=prod mix pleroma.relay follow https://relay.dragon-fly.club/actor`, 或者
+    `./bin/pleroma_ctl relay follow https://relay.dragon-fly.club/actor`
+
+## 不受欢迎的内容
+
+设立此中继的初衷是希望促进中文用户间的交流，但鉴于中继本身放大信息流动的天然特性，有一些内容是不适合以此种形式传播的。
+
+以下内容在本中继不受欢迎，大量发布、或主要发布涉及相关内容的实例将可能被移除转发列表并被屏蔽，且相关操作不会有任何事先告知：
+
+  * 大量非中文内容
+  * 大量非原创或无意义的转发、重复内容刷屏
+  * 大量虚假内容、大量广告或其他商业目的的内容
+  * 讨论政治、发表政见
+  * 发布成人内容等不适合公开展示的内容
+  * 血腥内容
+  * 煽动暴力、宣扬恐怖主义
+  * 针对他人的人身攻击、仇恨言论
+  * 其他另人反感的内容
+
+:!! 注意
+    [中继管理员](https://mast.dragon-fly.club/@holgerhuo)保留判定任意给定内容或订阅实例是否合规、以及作出封禁决定的最终权利。
+    注意
+
+
+
+
+## 资源消耗
+
+启用中继功能后实例会收到来自同一中继其他实例的**所有**公开消息，消息量的增加会直接导致实例数据库与媒体文件空间占用的增加，并且会消耗更多的计算资源来处理这些消息，对于配置较低的实例可能造成一定压力，如果出现存储或性能问题，可以尝试禁用中继来缓解。
+
+## 故障影响
+
+中继只是一个消息流转服务，并不影响实例本身的功能，在中继发生故障（或被实例禁用）时，将不能再收到来自中继转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 ActivityPub 网络上的消息。即：跨站时间轴中来自同中继其他实例的消息可能减少，其余功能均不受影响。
+
+## 成员
+
+以下为目前订阅了本中继服务的实例列表，列表每15分钟自动更新，并不完全反映最新的真实订阅情况，仅供参考。
 '''
 
-long_timeout_instances = [
-    'hello.2heng.xin',
-]
 
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0 (https://mastodon-relay.moew.science)'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/100.0 (https://relay.dragon-fly.club)'
 
 instance_ids = set()
 
 
 def read_redis_keys():
     cmd = ['/usr/bin/redis-cli']
-    #cmdin = 'KEYS *'.encode('utf-8')
     cmdin = 'KEYS relay:subscription:*'.encode('utf-8')
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     return p.communicate(input=cmdin)[0].decode('utf-8')
@@ -33,8 +86,7 @@ def read_redis_keys():
 
 def generate_instance_id(page):
     uid = []
-    # Use combinition of instance URI, email and admin info to determine an unique instance
-    # This is used to de-duplicate when one instance may registered multiple domains
+
     try:
         uid.append(page['uri'] if page['uri'] else '')
     except KeyError:
@@ -68,34 +120,11 @@ def generate_list():
     md_list = []
     _timeout = 4
 
-    # no need to check error for localhost, fail directly
-    _stats = requests.get("http://localhost:8085/stats").json()
 
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
             continue
         domain = line.split('subscription:')[-1]
-
-        # cal delivery rate
-        _total = 0
-        _rate = -1
-        try:
-            code202 = 0
-            for c, v in _stats['delivery_codes_per_domain'][domain].items():
-                if 'DOMAIN' in c:
-                    continue
-                if c == '202':
-                    code202 = v
-                _total += v
-            if _total == 0:
-                _rate = 1
-            else:
-                _rate = code202 / _total
-        except KeyError:
-            pass
-
-        if domain in long_timeout_instances:
-            _timeout = 30
 
         headers = {
             'User-Agent': USER_AGENT
@@ -103,7 +132,7 @@ def generate_list():
 
         # query server meta
         try:
-            md_line, uid = try_mastodon(headers, domain, _timeout, _rate)
+            md_line, uid = try_mastodon(headers, domain, _timeout)
             if uid in instance_ids:
                 logger.info("Skipped duplicate domain %s" % domain)
                 continue
@@ -112,27 +141,25 @@ def generate_list():
         except requests.HTTPError as e:
             if e.response.status_code == 404:
                 try:
-                    md_line, uid = try_misskey(headers, domain, _timeout, _rate)
+                    md_line, uid = try_misskey(headers, domain, _timeout)
                     if uid and uid in instance_ids:
                         logger.info("Skipped duplicate domain %s" % domain)
                     instance_ids.add(uid)
                 except Exception as e:
-                    md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (
-                    domain, domain, _rate * 100)
+                    md_line = '  * [%s](https://%s) | Stats Unavailable)' % (domain, domain)
                     md_list.append(md_line)
                     logger.warning(e)
                     continue
 
                 md_list.append(md_line)
         except Exception as e:
-            md_line = '  * [%s](https://%s) | (Stats Unavailable 📤 %.2f%%)' % (
-                domain, domain, _rate * 100)
+            md_line = '  * [%s](https://%s) | Stats Unavailable' % (domain, domain)
             md_list.append(md_line)
             logger.warning(e)
     return md_list
 
 
-def try_mastodon(headers, domain, timeout, send_rate):
+def try_mastodon(headers, domain, timeout):
     url = "https://%s/api/v1/instance" % domain
     response = requests.get(url, headers=headers, timeout=timeout)
     if not response:
@@ -144,12 +171,11 @@ def try_mastodon(headers, domain, timeout, send_rate):
     title = page['title']
     version = page['version']
     stats = page['stats']
-    md_line = '  * [%s](https://%s) | (v%s 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
-                                                                        version, stats['user_count'], stats['status_count'], stats['domain_count'], send_rate * 100)
+    md_line = '  * [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
     return md_line, uid
 
 
-def try_misskey(headers, domain, timeout, send_rate):
+def try_misskey(headers, domain, timeout):
     url_meta = "https://%s/api/meta" % domain
     resp_meta = requests.post(url_meta, headers=headers, timeout=timeout)
     if not resp_meta:
@@ -166,8 +192,7 @@ def try_misskey(headers, domain, timeout, send_rate):
     if not resp_stats:
         resp_stats.raise_for_status()
     stats = resp_stats.json()
-    md_line = '  * [%s](https://%s) | (v%s (Misskey) 👥 %s 💬 %s 🐘 %s 📤 %.2f%%)' % (title, domain,
-                                                                        version, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], send_rate * 100)
+    md_line = '  * [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
     return md_line, uid
 
 
@@ -197,7 +222,7 @@ if __name__ == "__main__":
 
     footer = '''
 
-👥 实例用户数, 💬 实例消息数, 🐘 实例互联数, 📤 中继消息发送成功率
+👥 实例用户数，💬 实例消息数，🐘 实例互联数，📌 实例版本
 
 %s
     ''' % date_str

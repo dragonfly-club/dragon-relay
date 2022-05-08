@@ -22,10 +22,10 @@ theme = "graphite"
 # ------------------------------------------------------------------------------
 
 # Site title - how this is displayed depends on the theme.
-title = "Moew Relay"
+title = "DragonRelay"
 
 # Site tagline - how this is displayed depends on the theme.
-tagline = "A scientific Mastodon relay"
+tagline = "Mastodon/Misskey/Pleroma中文中继"
 
 
 # ------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ tagline = "A scientific Mastodon relay"
 # absolute urls, a single forward slash ("/") for site-relative urls, or an
 # empty string (the default) for page-relative urls. Unless you have a
 # specific reason for changing it, the default option is the most flexible.
-root = ""
+root = "/"
 
 
 # ------------------------------------------------------------------------------
@@ -45,4 +45,4 @@ root = ""
 
 # Choose a file extension for generated files, e.g. ".html" (the default),
 # or specify a forward slash ("/") to generate directory-style urls.
-extension = ".html"
+extension = "/"

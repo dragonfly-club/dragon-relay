@@ -1,8 +1,0 @@
----
-# This is a sample menu file.
----
-
-* [Home](@root/)
-* [Members](@root/members//)
-* [About](@root/about//)
-* [FAQ](@root/faq//)

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /var/www/html/mastodon-relay
+cd /usr/share/nginx/pubrelay
 
 ./gen-member-list.py || exit 1;
 
