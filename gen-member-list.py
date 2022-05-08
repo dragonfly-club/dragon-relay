@@ -16,7 +16,7 @@ subtitle: Mastodon/Misskey/Pleroma中文中继
 
 DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼容ActivityPub的软件，欢迎各个社区管理员加入！
 
-# 如何使用
+## 如何使用
 
 
 ::: infobox .warning
@@ -32,8 +32,7 @@ Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添
 如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继：
 
 ::: span
-    `MIX_ENV=prod mix pleroma.relay follow https://relay.dragon-fly.club/actor`, 或者
-    `./bin/pleroma_ctl relay follow https://relay.dragon-fly.club/actor`
+    `MIX_ENV=prod mix pleroma.relay follow https://relay.dragon-fly.club/actor` 
 
 ## 不受欢迎的内容
 
@@ -53,18 +52,6 @@ Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添
 
 :!! 注意
     [中继管理员](https://mast.dragon-fly.club/@holgerhuo)保留判定任意给定内容或订阅实例是否合规、以及作出封禁决定的最终权利。
-    注意
-
-
-
-
-## 资源消耗
-
-启用中继功能后实例会收到来自同一中继其他实例的**所有**公开消息，消息量的增加会直接导致实例数据库与媒体文件空间占用的增加，并且会消耗更多的计算资源来处理这些消息，对于配置较低的实例可能造成一定压力，如果出现存储或性能问题，可以尝试禁用中继来缓解。
-
-## 故障影响
-
-中继只是一个消息流转服务，并不影响实例本身的功能，在中继发生故障（或被实例禁用）时，将不能再收到来自中继转发的其他实例消息，但仍然可以通过原生的跨站交互功能获取到 ActivityPub 网络上的消息。即：跨站时间轴中来自同中继其他实例的消息可能减少，其余功能均不受影响。
 
 ## 成员
 
@@ -217,7 +204,7 @@ if __name__ == "__main__":
     logger.info('Started generating member list.')
     sub_list = generate_list()
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    date_str = 'Updated %s instances at: %s HKT' % (len(sub_list), curr_time)
+    date_str = 'Updated %s instances at: %s CST' % (len(sub_list), curr_time)
     logger.info(date_str)
 
     footer = '''
@@ -225,6 +212,14 @@ if __name__ == "__main__":
 👥 实例用户数，💬 实例消息数，🐘 实例互联数，📌 实例版本
 
 %s
+
+## 技术细节
+
+本中继原使用Pub-Relay后端，现为[Activity-Relay](https://github.com/yukimochi/Activity-Relay)，[前端页面](https://github.com/HolgerHuo/dragon-relay)使用Ivy定时生成
+
+## 维护者
+
+Holger Huo ([@holgerhuo@dragon-fly.club](https://mast.dragon-fly.club/@holgerhuo))
     ''' % date_str
     full_page = '%s\n%s\n\n%s\n' % (
         headers, '\n'.join(sub_list), footer)
