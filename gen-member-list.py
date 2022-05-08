@@ -20,16 +20,16 @@ DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼�
 
 
 ::: infobox .warning
-    Note: By subscribing this relay, you acknowledge, understand and agree that this is a (mostly) Chinese speaking relay, it is supposed and assumed that majority of the users in your instance toot in Chinese, or at least can read Chinese. Otherwise your instance may be removed and blocked without any notice nor explanation if too many non-Chinese toots are sent to us or unwelcomed content are reported by any of our subscribers.
+    Note: By subscribing this relay, you understand and agree that this is a Chinese-speaking relay. If your instance is a non-Chinese instance, it may be removed and blocked without any notice or explanation.
 
-Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址（其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址）：
+Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址(其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址):
 
 ::: span
     `https://relay.dragon-fly.club/inbox`
 
-刷新后状态变为 Enabled 即已经成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
+刷新后状态变为 Enabled 即代表成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
 
-如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继：
+如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继:
 
 ::: span
     `MIX_ENV=prod mix pleroma.relay follow https://relay.dragon-fly.club/actor` 
@@ -158,7 +158,7 @@ def try_mastodon(headers, domain, timeout):
     title = page['title']
     version = page['version']
     stats = page['stats']
-    md_line = '  * [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
+    md_line = '  * %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
     return md_line, uid
 
 
@@ -179,7 +179,7 @@ def try_misskey(headers, domain, timeout):
     if not resp_stats:
         resp_stats.raise_for_status()
     stats = resp_stats.json()
-    md_line = '  * [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
+    md_line = '  * %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
     return md_line, uid
 
 
