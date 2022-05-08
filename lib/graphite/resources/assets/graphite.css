@@ -249,8 +249,8 @@ body {
 .main {
     width: 600px;
     padding: 32px 50px 40px 50px;
-    margin-left: 360px;
-    border-left: 3px solid black;
+    margin: auto;
+    /* border-left: 3px solid black; */
     min-height: calc(100vh - 80px);
 }
 

@@ -2,6 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="author" content="@holgerhuo@dragon-fly.club">
+        <meta property="og:url" content="https://relay.dragon-fly.club/">
+        <meta property="og:title" content="DragonRelay">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="DragonRelay">
+        <meta name="apple-mobile-web-app-title" content="DragonRelay">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ node.meta_title || node.title || site.title }}</title>
         <link rel="stylesheet" href="@root/assets/fonts.css">
@@ -13,7 +20,7 @@
         {{ inc.head }}
     </head>
     <body class="{$ classes|join(' ') $}">
-        <header class="masthead">
+        <!--<header class="masthead">
             <h1><a href="@root/">{{ site.title || "Site Title" }}</a></h1>
             {% if site.tagline %}
                 <p class="tagline">{{ site.tagline.strip() }}</p>
@@ -30,7 +37,7 @@
                 </label>
                 {{ inc.menu || automenu }}
             </nav>
-        </header>
+        </header>-->
         <article class="main">
             <header class="title">
                 <h1>{{ node.title }}</h1>
