@@ -133,7 +133,7 @@ def generate_list():
                         logger.info("Skipped duplicate domain %s" % domain)
                     instance_ids.add(uid)
                 except Exception as e:
-                    md_line = '  * [%s](https://%s) | Stats Unavailable)' % (domain, domain)
+                    md_line = '  * [%s](https://%s) | Stats Unavailable' % (domain, domain)
                     md_list.append(md_line)
                     logger.warning(e)
                     continue
