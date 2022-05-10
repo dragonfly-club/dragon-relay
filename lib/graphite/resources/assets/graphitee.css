@@ -161,6 +161,10 @@ h1 code {
     font-size: 28px;
 }
 
+.code {
+    display: flex;
+}
+
 /**
  * Lists
  */

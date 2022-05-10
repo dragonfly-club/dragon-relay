@@ -24,14 +24,14 @@ DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼�
 
 Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址(其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址):
 
-::: span
+::: span .code
     `https://relay.dragon-fly.club/inbox`
 
 刷新后状态变为 Enabled 即代表成功添加并订阅本中继服务。如果状态长时间处于 Pending, 可能是订阅回调消息丢失，可以尝试删除后重新添加并启用。
 
 如果是 Pleroma 或其他与其兼容的 ActivityPub 实现，则可以通过以下命令关注 (Follow) 中继:
 
-::: span
+::: span .code
     `MIX_ENV=prod mix pleroma.relay follow https://relay.dragon-fly.club/actor` 
 
 ## 不受欢迎的内容
