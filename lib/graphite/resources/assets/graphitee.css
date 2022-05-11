@@ -681,3 +681,18 @@ th, td {
         font-size: 15px;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #AAAAAA;
+    background: #202020;
+  }
+
+  body a {
+    color: #809fff;
+  }
+
+  .infobox, .alertbox, code {
+    background-color: #383838;
+  }
+}
