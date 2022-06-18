@@ -51,7 +51,7 @@ Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添
   * 其他另人反感的内容
 
 :!! 注意
-    [中继管理员](https://mast.dragon-fly.club/@holgerhuo)保留判定任意给定内容或订阅实例是否合规、以及作出封禁决定的最终权利。
+    [中继管理员](https://mast.dragon-fly.club/@NotreMonde)保留判定任意给定内容或订阅实例是否合规、以及作出封禁决定的最终权利。
 
 ## 成员
 
@@ -215,11 +215,11 @@ if __name__ == "__main__":
 
 ## 技术细节
 
-本中继原使用Pub-Relay后端，现为[Activity-Relay](https://github.com/yukimochi/Activity-Relay)，[前端页面](https://github.com/HolgerHuo/dragon-relay)使用Ivy定时生成
+本中继原使用Pub-Relay后端，现为[Activity-Relay](https://github.com/yukimochi/Activity-Relay)，[前端页面](https://github.com/dragonfly-club/dragon-relay)使用Ivy定时生成
 
-## 维护者
+## 维护团队
 
-Holger Huo ([@holgerhuo@dragon-fly.club](https://mast.dragon-fly.club/@holgerhuo))
+[DragonFly Club](https://mast.dragon-fly.club/)
     ''' % date_str
     full_page = '%s\n%s\n\n%s\n' % (
         headers, '\n'.join(sub_list), footer)
