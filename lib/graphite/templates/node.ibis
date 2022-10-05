@@ -3,11 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="author" content="@holgerhuo@dragon-fly.club">
+        <meta name="author" content="DragonFly Club">
+        <meta name="description" content="DragonRelay是一款中文Activity Pub中继，欢迎各大中文联邦宇宙站点加入🎉">
         <meta property="og:url" content="https://relay.dragon-fly.club/">
         <meta property="og:title" content="DragonRelay">
+        <meta property="og:site_name" content="DragonRelay">
+        <meta property="og:description" content="DragonRelay是一款中文Activity Pub中继，欢迎各大中文联邦宇宙站点加入🎉">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="DragonRelay">
+        <meta name="twitter:description" content="DragonRelay是一款中文Activity Pub中继，欢迎各大中文联邦宇宙站点加入🎉">
         <meta name="apple-mobile-web-app-title" content="DragonRelay">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/x-icon" href="https://mast.dragon-fly.club/favicon.ico">
@@ -15,9 +19,6 @@
         <link rel="stylesheet" href="@root/assets/fonts.css">
         <link rel="stylesheet" href="@root/assets/graphitee.css?221005">
         <link rel="stylesheet" href="@root/assets/pygments.css">
-        {% if node.meta_description %}
-            <meta name="description" content="{$ node.meta_description.strip() $}">
-        {% endif %}
         {{ inc.head }}
     </head>
     <body class="{$ classes|join(' ') $}">

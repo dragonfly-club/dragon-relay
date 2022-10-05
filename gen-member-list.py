@@ -15,13 +15,13 @@ subtitle: Mastodon/Misskey/Pleroma中文中继
 
 欢迎来到**DragonRelay**！
 
-DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼容ActivityPub的软件，欢迎各个社区管理员加入！
+DragonRelay 是一款Activity Pub中继，支持Mastodon/Misskey/Pleroma等兼容ActivityPub的软件，欢迎各大实例管理员加入！
 
 ## 如何使用
 
 
 ::: infobox .warning
-    Note: By subscribing this relay, you understand and agree that this is a Chinese-speaking relay. If your instance is a non-Chinese instance, it may be removed and blocked without any notice or explanation.
+    Note: By subscribing to this relay, you acknowledge that this is a relay used solely among instances that post in Chinese. If your instance contains too many non-Chinese posts, it may be removed and blocked without any notice or explanation.
 
 Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添加以下地址(其他与 Mastodon 兼容的 ActivityPub 实现也可能可以使用此地址):
 
@@ -60,7 +60,7 @@ Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添
 '''
 
 
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/100.0 (https://relay.dragon-fly.club)'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/105.0 (https://relay.dragon-fly.club)'
 
 instance_ids = set()
 
@@ -233,11 +233,11 @@ if __name__ == "__main__":
 
 ## 技术细节
 
-本中继原使用Pub-Relay后端，现为[Activity-Relay](https://github.com/yukimochi/Activity-Relay)，[前端页面](https://github.com/dragonfly-club/dragon-relay)使用Ivy定时生成
+本中继后端使用[Activity-Relay](https://github.com/yukimochi/Activity-Relay)，[前端页面](https://github.com/dragonfly-club/dragon-relay)使用Ivy定时生成。
 
 ## 维护团队
 
-[DragonFly Club](https://mast.dragon-fly.club/)
+Proudly by [DragonFly Club](https://dragon-fly.club/)
     ''' % date_str
     full_page = '%s\n%s\n\n%s\n' % (
         headers, '\n'.join(sub_list), footer)
