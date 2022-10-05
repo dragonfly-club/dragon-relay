@@ -109,6 +109,8 @@ def generate_list():
     md_failed_list =[]
     _timeout = 4
 
+    def sortSecond(val):
+        return val[1]
 
     for line in read_redis_keys().split('\n'):
         if not line or 'subscription' not in line:
@@ -145,7 +147,8 @@ def generate_list():
             md_line = '  * [%s](https://%s) | Stats Unavailable' % (domain, domain)
             md_failed_list.append(md_line)
             logger.warning(e)
-    return md_list + md_failed_list
+    md_list.sort(key=sortSecond,reverse=True)
+    return map( lambda i: i[0], md_list ) + md_failed_list
 
 
 def try_mastodon(headers, domain, timeout):
@@ -167,7 +170,7 @@ def try_mastodon(headers, domain, timeout):
         fav_md = ''
 
     md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
-    return md_line, uid
+    return ( md_line, stats['user_count'] ), uid
 
 
 def try_misskey(headers, domain, timeout):
@@ -192,11 +195,11 @@ def try_misskey(headers, domain, timeout):
     resp_stats = requests.post(url_stats, headers=headers, timeout=15)
     if not resp_stats:
         md_line = '  * %s %s | [%s](https://%s) | 📌 %s' % (fav_md, title, domain, domain, version)
-        return md_line, uid
+        return ( md_line, 0 ), uid
     stats = resp_stats.json()
 
     md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
-    return md_line, uid
+    return ( md_line, stats['originalUsersCount'] ), uid
 
 
 def write_file(filename, data, mode='w'):
