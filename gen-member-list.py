@@ -221,9 +221,7 @@ if __name__ == "__main__":
     sub_list = generate_list()
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     date_str = 'Updated %s instances at: %s %s' % (len(sub_list), curr_time, datetime.now(timezone.utc).astimezone().tzinfo)
-print(local_tzname)
     logger.info(date_str)
-
     footer = '''
 
 👥 实例用户数，💬 实例消息数，🐘 实例互联数，📌 实例版本
