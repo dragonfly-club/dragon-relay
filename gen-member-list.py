@@ -162,7 +162,7 @@ def try_mastodon(headers, domain, timeout):
     stats = page['stats']
     favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
     if favicon.content:
-        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content))
+        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content).decode('utf-8'))
     else:
         fav_md = ''
 
@@ -184,7 +184,7 @@ def try_misskey(headers, domain, timeout):
 
     favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
     if favicon.content:
-        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content))
+        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content).decode('utf-8'))
     else:
         fav_md = ''
 

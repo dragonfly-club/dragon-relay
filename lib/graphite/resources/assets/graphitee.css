@@ -230,8 +230,11 @@ hr {
 }
 
 img {
-    margin: 40px auto;
-    display: block;
+    /* margin: 40px auto; */
+    display: inline;
+    height: 1em;
+    top: 3px;
+    position: relative;
 }
 
 /**
