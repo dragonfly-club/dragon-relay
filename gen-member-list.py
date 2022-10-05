@@ -148,7 +148,7 @@ def generate_list():
             md_failed_list.append(md_line)
             logger.warning(e)
     md_list.sort(key=sortSecond,reverse=True)
-    return map( lambda i: i[0], md_list ) + md_failed_list
+    return list(map( lambda i: i[0], md_list )) + md_failed_list
 
 
 def try_mastodon(headers, domain, timeout):
