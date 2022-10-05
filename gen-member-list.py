@@ -164,7 +164,7 @@ def try_mastodon(headers, domain, timeout):
 
 def try_misskey(headers, domain, timeout):
     url_meta = "https://%s/api/meta" % domain
-    resp_meta = requests.post(url_meta, headers=headers, timeout=timeout)
+    resp_meta = requests.post(url_meta, headers=headers, timeout=15)
     if not resp_meta:
         resp_meta.raise_for_status()
     meta = resp_meta.json()
@@ -175,7 +175,7 @@ def try_misskey(headers, domain, timeout):
     version = meta['version']
 
     url_stats = "https://%s/api/stats" % domain
-    resp_stats = requests.post(url_stats, headers=headers, timeout=timeout)
+    resp_stats = requests.post(url_stats, headers=headers, timeout=15)
     if not resp_stats:
         resp_stats.raise_for_status()
     stats = resp_stats.json()
