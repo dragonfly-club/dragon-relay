@@ -20,6 +20,12 @@
         <link rel="stylesheet" href="@root/assets/graphitee.css?221005">
         <link rel="stylesheet" href="@root/assets/pygments.css">
         {{ inc.head }}
+        <script>
+            const links = document.getElementsByTagName('a');
+            for(var i=0; i<links.length; i++) {
+                links[i].target = "_blank";
+            }
+        </script>
     </head>
     <body class="{$ classes|join(' ') $}">
         <!--<header class="masthead">
