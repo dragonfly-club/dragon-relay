@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="author" content="DragonFly Club">
         <meta name="description" content="DragonRelay是一款中文Activity Pub中继，欢迎各大中文联邦宇宙站点加入🎉">
+        <meta name="keywords" content="activity-pub,pubrelay,relay,pub-relay,fediverse,mastodon,misskey,activity-relay,联邦宇宙,联邦宇宙中继,中继" >
         <meta property="og:url" content="https://relay.dragon-fly.club/">
         <meta property="og:title" content="DragonRelay">
         <meta property="og:site_name" content="DragonRelay">
@@ -28,24 +29,6 @@
         </script>
     </head>
     <body class="{$ classes|join(' ') $}">
-        <!--<header class="masthead">
-            <h1><a href="@root/">{{ site.title || "Site Title" }}</a></h1>
-            {% if site.tagline %}
-                <p class="tagline">{{ site.tagline.strip() }}</p>
-            {% endif %}
-            {% if site.version %}
-                <p class="version">{{ site.version.strip() }}</p>
-            {% endif %}
-            <nav class="menu">
-                <input id="menu-check" type="checkbox"/>
-                <label id="menu-label" for="menu-check" class="unselectable">
-                    <span class="icon close-icon">✕</span>
-                    <span class="icon open-icon">☰</span>
-                    <span class="text">Menu</span>
-                </label>
-                {{ inc.menu || automenu }}
-            </nav>
-        </header>-->
         <article class="main">
             <header class="title">
                 <h1>{{ node.title }}</h1>
