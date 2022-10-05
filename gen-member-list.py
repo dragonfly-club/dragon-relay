@@ -2,6 +2,7 @@
 
 import logging
 import requests
+import base64
 
 from datetime import datetime
 from subprocess import Popen, PIPE
@@ -105,6 +106,7 @@ def generate_instance_id(page):
 
 def generate_list():
     md_list = []
+    md_failed_list =[]
     _timeout = 4
 
 
@@ -141,9 +143,9 @@ def generate_list():
                 md_list.append(md_line)
         except Exception as e:
             md_line = '  * [%s](https://%s) | Stats Unavailable' % (domain, domain)
-            md_list.append(md_line)
+            md_failed_list.append(md_line)
             logger.warning(e)
-    return md_list
+    return md_list + md_failed_list
 
 
 def try_mastodon(headers, domain, timeout):
@@ -158,7 +160,13 @@ def try_mastodon(headers, domain, timeout):
     title = page['title']
     version = page['version']
     stats = page['stats']
-    md_line = '  * %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
+    favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
+    if favicon.content:
+        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content))
+    else:
+        fav_md = ''
+
+    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
     return md_line, uid
 
 
@@ -174,12 +182,20 @@ def try_misskey(headers, domain, timeout):
     title = meta['name']
     version = meta['version']
 
+    favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
+    if favicon.content:
+        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content))
+    else:
+        fav_md = ''
+
     url_stats = "https://%s/api/stats" % domain
     resp_stats = requests.post(url_stats, headers=headers, timeout=15)
     if not resp_stats:
-        resp_stats.raise_for_status()
+        md_line = '  * %s %s | [%s](https://%s) | 📌 %s' % (fav_md, title, domain, domain, version)
+        return md_line, uid
     stats = resp_stats.json()
-    md_line = '  * %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
+
+    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
     return md_line, uid
 
 
