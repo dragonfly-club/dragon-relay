@@ -13,7 +13,7 @@
         <link rel="icon" type="image/x-icon" href="https://mast.dragon-fly.club/favicon.ico">
         <title>{{ node.meta_title || node.title || site.title }}</title>
         <link rel="stylesheet" href="@root/assets/fonts.css">
-        <link rel="stylesheet" href="@root/assets/graphitee.css?220511">
+        <link rel="stylesheet" href="@root/assets/graphitee.css?221005">
         <link rel="stylesheet" href="@root/assets/pygments.css">
         {% if node.meta_description %}
             <meta name="description" content="{$ node.meta_description.strip() $}">
