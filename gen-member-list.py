@@ -220,7 +220,8 @@ if __name__ == "__main__":
     logger.info('Started generating member list.')
     sub_list = generate_list()
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    date_str = 'Updated %s instances at: %s %s' % (len(sub_list), curr_time, datetime.datetime.now().astimezone().tzinfo.tzname(local_now))
+    date_str = 'Updated %s instances at: %s %s' % (len(sub_list), curr_time, datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo)
+print(local_tzname)
     logger.info(date_str)
 
     footer = '''
