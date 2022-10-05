@@ -4,7 +4,7 @@ import logging
 import requests
 import base64
 
-from datetime import datetime
+from datetime import datetime, timezone
 from subprocess import Popen, PIPE
 
 outfile = 'src/index.stx'
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     logger.info('Started generating member list.')
     sub_list = generate_list()
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    date_str = 'Updated %s instances at: %s %s' % (len(sub_list), curr_time, datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo)
+    date_str = 'Updated %s instances at: %s %s' % (len(sub_list), curr_time, datetime.now(timezone.utc).astimezone().tzinfo)
 print(local_tzname)
     logger.info(date_str)
 
