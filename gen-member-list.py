@@ -60,7 +60,7 @@ Mastodon 管理员可在后台设置中的“管理-中继-添加新中继”添
 '''
 
 
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/105.0 (https://relay.dragon-fly.club)'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0 (https://relay.dragon-fly.club)'
 
 instance_ids = set()
 
@@ -129,10 +129,15 @@ def generate_list():
                 continue
             instance_ids.add(uid)
             md_list.append(md_line)
-        except requests.HTTPError as e:
-            if e.response.status_code == 404:
+        except Exception as e:
+            try:
+                md_line, uid = try_misskey(headers, domain, _timeout)
+                if uid and uid in instance_ids:
+                    logger.info("Skipped duplicate domain %s" % domain)
+                instance_ids.add(uid)
+            except Exception as e:
                 try:
-                    md_line, uid = try_misskey(headers, domain, _timeout)
+                    md_line, uid = try_nodeinfo(headers, domain, _timeout)
                     if uid and uid in instance_ids:
                         logger.info("Skipped duplicate domain %s" % domain)
                     instance_ids.add(uid)
@@ -141,16 +146,57 @@ def generate_list():
                     md_failed_list.append(md_line)
                     logger.warning(e)
                     continue
-
-                md_list.append(md_line)
-        except Exception as e:
-            md_line = '  * [%s](https://%s) | Stats Unavailable' % (domain, domain)
-            md_failed_list.append(md_line)
-            logger.warning(e)
+            md_list.append(md_line)
     md_list.sort(key=sortSecond,reverse=True)
     return list(map( lambda i: i[0], md_list )) + md_failed_list
 
+def try_nodeinfo(headers, domain, timeout):
+    url = "https://%s/.well-known/nodeinfo" % domain
+    response = requests.get(url, headers=headers, timeout=timeout)
+    if not response:
+        response.raise_for_status()
+    wellknown = response.json()
+    for l in wellknown["links"]:
+        if l["rel"] == 'http://nodeinfo.diaspora.software/ns/schema/2.0':
+            nodeinfo_url = l["href"]
+            break
 
+    resp = requests.get(nodeinfo_url, headers=headers, timeout=timeout)
+    if not resp:
+        resp.raise_for_status()
+    nodeinfo = resp.json()
+
+    data = []
+
+    try:
+        data.append(nodeinfo["metadata"]["nodeName"] if nodeinfo["metadata"]["nodeName"] else '')
+    except KeyError:
+        pass
+    try:
+        data.append(nodeinfo["metadata"]["nodeDescription"] if nodeinfo["metadata"]["nodeDescription"] else '')
+    except KeyError:
+        pass
+    try:
+        data.append(nodeinfo['maintainer']['name'] if nodeinfo['maintainer'] else '')
+        data.append(nodeinfo['maintainer']['email'] if nodeinfo['maintainer'] else '')
+    except KeyError:
+        pass
+
+    uid = '_'.join(data)
+
+    title = nodeinfo["metadata"]["nodeName"]
+    version = nodeinfo["software"]["version"]
+    software = nodeinfo["software"]["name"]
+    stats = nodeinfo["usage"]
+    favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
+    if favicon.content:
+        fav_md = '![icon for %s](data:image/x-icon;base64,%s)' % (title, base64.b64encode(favicon.content).decode('utf-8'))
+    else:
+        fav_md = ''
+
+    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 📌 %s(%s)' % (fav_md, title, domain, domain, stats['users']['total'], stats['localPosts'], software, version)
+    return ( md_line, stats['users']['total'] ), uid
+    
 def try_mastodon(headers, domain, timeout):
     url = "https://%s/api/v1/instance" % domain
     response = requests.get(url, headers=headers, timeout=timeout)
@@ -169,7 +215,7 @@ def try_mastodon(headers, domain, timeout):
     else:
         fav_md = ''
 
-    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
+    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 Mastodon(%s)' % (fav_md, title, domain, domain, stats['user_count'], stats['status_count'], stats['domain_count'], version)
     return ( md_line, stats['user_count'] ), uid
 
 
@@ -198,7 +244,7 @@ def try_misskey(headers, domain, timeout):
         return ( md_line, 0 ), uid
     stats = resp_stats.json()
 
-    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 %s' % (fav_md, title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
+    md_line = '  * %s %s | [%s](https://%s) | 👥 %s 💬 %s 🐘 %s 📌 Misskey(%s)' % (fav_md, title, domain, domain, stats['originalUsersCount'], stats['originalNotesCount'], stats['instances'], version)
     return ( md_line, stats['originalUsersCount'] ), uid
 
 
