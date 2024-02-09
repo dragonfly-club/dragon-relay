@@ -208,6 +208,9 @@ def try_mastodon(headers, domain, timeout):
 
     title = page['title']
     version = page['version']
+    if "Firefish" in version or "Misskey" in version or "firefish" in version or "misskey" in version:
+        raise "Firefish/Misskey"
+        
     stats = page['stats']
     favicon = requests.get("https://%s/favicon.ico" % domain, headers=headers, timeout=timeout)
     if favicon.content:
